@@ -1,0 +1,16 @@
+--- #YAML:1.0
+name:                Language-Befunge-Storage-Generic-Vec-XS
+version:             0.01
+abstract:            Language::Befunge::Storage::Generic::Vec rewritten for speed
+license:             artistic_2
+author:              
+    - Mark Glines, <mark@glines.org>
+generated_by:        ExtUtils::MakeMaker version 6.42
+distribution_type:   module
+requires:     
+    Language::Befunge:             4.00
+    Language::Befunge::Vector::XS: 1.10
+    Test::More:                    0
+meta-spec:
+    url:     http://module-build.sourceforge.net/META-spec-v1.3.html
+    version: 1.3
