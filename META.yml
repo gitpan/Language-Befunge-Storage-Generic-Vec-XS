@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:                Language-Befunge-Storage-Generic-Vec-XS
-version:             0.01
+version:             0.02
 abstract:            Language::Befunge::Storage::Generic::Vec rewritten for speed
 license:             artistic_2
 author:              

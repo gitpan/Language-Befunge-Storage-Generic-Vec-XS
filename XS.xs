@@ -17,6 +17,26 @@
 #define NEED_newRV_noinc
 #include "ppport.h"
 
+//#define DEBUG
+#ifdef DEBUG
+static inline void dump_Avec(int nd, AV *v) {
+    int i;
+    fprintf(stderr, "(");
+    for(i = 0; i < nd; i++) {
+        SV **thisv = av_fetch(v,   i, 0);
+        if(i)
+            fprintf(stderr, ",");
+        if(thisv)
+            fprintf(stderr, "%i", SvIV(*thisv));
+        else
+            fprintf(stderr, "undef");
+    }
+    fprintf(stderr, ")");
+}
+#define debug(a...) fprintf(stderr, a)
+#else /* !DEBUG */
+#define debug(a...)
+#endif /* DEBUG */
 
 static inline int _Aoffset(int nd, AV *v, AV *min, AV *max) {
     int i, rv = 0, lastsize = 1;
@@ -34,6 +54,18 @@ static inline int _Aoffset(int nd, AV *v, AV *min, AV *max) {
         rv *= thissize;
         rv += thispos;
         lastsize *= thissize;
+    }
+    if(rv < 0) {
+#ifdef DEBUG
+        debug("_Aoffset: min=");
+        dump_Avec(nd, min);
+        debug(" max=");
+        dump_Avec(nd, max);
+        debug(" v=");
+        dump_Avec(nd, v);
+        debug("\n");
+#endif /* DEBUG */
+        croak("rv < 0!");
     }
     return rv;
 }
@@ -288,6 +320,7 @@ _expand( self, snd, point, min, max, old_min, old_max, storus )
                 smax_0 = av_fetch(amax, 0, 0);
                 max_0 = SvIV(*smax_0);
                 point_0 = SvIV(*spoint_0);
+                debug("expand: never offset\n");
                 newoffset = _Aoffset(nd, apoint, amin, amax);
                 while(point_0 <= max_0) {
                     newivptr[newoffset++] = filler;
@@ -299,10 +332,11 @@ _expand( self, snd, point, min, max, old_min, old_max, storus )
             }
             if(notyet) {
                 // skip forward along this row until we get to the valid data
-                SV **sold_0 = av_fetch(amin, 0, 0);
+                SV **sold_0 = av_fetch(aoldmin, 0, 0);
                 IV old_0 = SvIV(*sold_0);
                 spoint_0 = av_fetch(apoint, 0, 0);
                 point_0 = SvIV(*spoint_0);
+                debug("expand: notyet offset (%i .. %i)\n",point_0,old_0);
                 newoffset = _Aoffset(nd, apoint, amin, amax);
                 while(point_0 < old_0) {
                     newivptr[newoffset++] = filler;
@@ -317,7 +351,9 @@ _expand( self, snd, point, min, max, old_min, old_max, storus )
             spoint_0 = av_fetch(apoint, 0, 0);
             point_0 = SvIV(*spoint_0);
             if(point_0 <= max_0) {
+                debug("expand: old offset: point_0=%i max_0=%i never=%i notyet=%i\n",point_0,max_0,never,notyet);
                 oldoffset = _Aoffset(nd, apoint, aoldmin, aoldmax);
+                debug("expand: new offset\n");
                 newoffset = _Aoffset(nd, apoint, amin, amax);
                 while(max_0 >= point_0) {
                     // copy data until the end of the row

@@ -12,7 +12,7 @@ use strict;
 use warnings;
 no warnings 'redefine';
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 use base 'Language::Befunge::Storage::Generic::Vec';
 use Language::Befunge::Vector;
