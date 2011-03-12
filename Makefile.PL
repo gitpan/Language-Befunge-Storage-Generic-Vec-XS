@@ -22,7 +22,7 @@ WriteMakefile(
     PREREQ_PM     => {
                        'Test::More' => 0,
                        'Language::Befunge' => '4.00',
-                       'Language::Befunge::Vector::XS' => '1.10',
+                       'Language::Befunge::Vector::XS' => '1.1.1',
                      },
     LIBS          => [''],  # e.g., '-lm'
     DEFINE        => '',    # e.g., '-DHAVE_SOMETHING'

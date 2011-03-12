@@ -21,7 +21,7 @@ REQUIREMENTS
 This module requires a minimum of the following:
 
 Language::Befunge v4.00
-Language::Befunge::Vector::XS v1.10.
+Language::Befunge::Vector::XS v1.1.1.
 
 
 SUPPORT AND DOCUMENTATION
